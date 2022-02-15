@@ -43,6 +43,34 @@ const Cadastro = async (
   }
 };
 
+const ListAll = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  await PoolPostgreSQL(`SELECT * FROM public.usuario`)
+    .then((result) => {
+      const PoolPostgreSQLRetorno = result as QueryResult;
+      if (PoolPostgreSQLRetorno.rows.length > 0) {
+        const usuarios = PoolPostgreSQLRetorno.rows as unknown as Array<User>
+        response.status(200).json({
+          usuarios,
+        });
+      } else {
+        response.status(200).json({
+          [`usuarios`]: [],
+        });
+      }
+
+    })
+    .catch((error) => {
+      response.status(400).json({
+        message: `Erro ao Salvar no PoolPostgreSQL ${error}`,
+      });
+    });
+};
+
 export default {
   Cadastro: Cadastro,
+  ListAll: ListAll,
 };
