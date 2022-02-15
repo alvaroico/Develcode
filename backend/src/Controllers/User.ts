@@ -18,11 +18,13 @@ const Cadastro = async (
         .then((result) => {
           const PoolPostgreSQLRetorno = result as QueryResult;
           if (
-            PoolPostgreSQLRetorno.rowCount == 0 &&
+            PoolPostgreSQLRetorno.rowCount == 0 ||
             PoolPostgreSQLRetorno.rowCount == undefined
           ) {
             response.status(400).json({
-              message: `Erro ao Salvar no PoolPostgreSQL ${PoolPostgreSQLRetorno}`,
+              message: `Erro ao Salvar no PoolPostgreSQL ${JSON.stringify(
+                PoolPostgreSQLRetorno
+              )}`,
             });
           } else {
             response.status(200).json({
@@ -32,7 +34,9 @@ const Cadastro = async (
         })
         .catch((error) => {
           response.status(400).json({
-            message: `Erro ao Salvar no PoolPostgreSQL ${error}`,
+            message: `Erro ao Salvar no PoolPostgreSQL ${JSON.stringify(
+              error
+            )}`,
           });
         });
     }
@@ -64,7 +68,7 @@ const ListAll = async (
     })
     .catch((error) => {
       response.status(400).json({
-        message: `Erro ao Salvar no PoolPostgreSQL ${error}`,
+        message: `Erro ao Listar no PoolPostgreSQL ${JSON.stringify(error)}`,
       });
     });
 };
@@ -85,11 +89,13 @@ const EditID = async (
         .then((result) => {
           const PoolPostgreSQLRetorno = result as QueryResult;
           if (
-            PoolPostgreSQLRetorno.rowCount == 0 &&
+            PoolPostgreSQLRetorno.rowCount == 0 ||
             PoolPostgreSQLRetorno.rowCount == undefined
           ) {
             response.status(400).json({
-              message: `Erro ao Editar no PoolPostgreSQL ${PoolPostgreSQLRetorno}`,
+              message: `Erro ao Editar no PoolPostgreSQL ${JSON.stringify(
+                PoolPostgreSQLRetorno
+              )}`,
             });
           } else {
             response.status(200).json({
@@ -99,7 +105,9 @@ const EditID = async (
         })
         .catch((error) => {
           response.status(400).json({
-            message: `Erro ao Salvar no PoolPostgreSQL ${error}`,
+            message: `Erro ao Salvar no PoolPostgreSQL ${JSON.stringify(
+              error
+            )}`,
           });
         });
     }
@@ -110,8 +118,48 @@ const EditID = async (
   }
 };
 
+const DeleteID = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { codigo } = request.query as { codigo: string };
+
+  if (codigo != undefined) {
+    await PoolPostgreSQL(`DELETE FROM public.usuario
+      WHERE codigo=${codigo}`)
+      .then((result) => {
+        const PoolPostgreSQLRetorno = result as QueryResult;
+        if (
+          PoolPostgreSQLRetorno.rowCount == 0 ||
+          PoolPostgreSQLRetorno.rowCount == undefined
+        ) {
+          response.status(400).json({
+            message: `Erro ao Deletar Usuario no PoolPostgreSQL ${JSON.stringify(
+              PoolPostgreSQLRetorno
+            )}`,
+          });
+        } else {
+          response.status(200).json({
+            message: "Usuario Deletado",
+          });
+        }
+      })
+      .catch((error) => {
+        response.status(400).json({
+          message: `Erro ao Deletar no PoolPostgreSQL ${JSON.stringify(error)}`,
+        });
+      });
+  } else {
+    response.status(400).json({
+      message: "Codigo não informados",
+    });
+  }
+};
+
 export default {
   Cadastro: Cadastro,
   ListAll: ListAll,
   EditID: EditID,
+  DeleteID: DeleteID,
 };
