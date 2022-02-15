@@ -14,5 +14,6 @@ Alguns detalhes:
 - Frontend: Android em Kotlin ou Java ou react native (gerando android) ou react (web) com tela de splash (react web não precisa tela de splash), listagem do cadastro com possibilidade de 
 ✅ visualizar
 ✅ incluir
-editar o registro
+✅ editar o registro
+Deletar
 - Código deverá ser comitado no github e depois nos enviado para análise

@@ -52,7 +52,7 @@ const ListAll = async (
     .then((result) => {
       const PoolPostgreSQLRetorno = result as QueryResult;
       if (PoolPostgreSQLRetorno.rows.length > 0) {
-        const usuarios = PoolPostgreSQLRetorno.rows as unknown as Array<User>
+        const usuarios = PoolPostgreSQLRetorno.rows as unknown as Array<User>;
         response.status(200).json({
           usuarios,
         });
@@ -61,7 +61,6 @@ const ListAll = async (
           [`usuarios`]: [],
         });
       }
-
     })
     .catch((error) => {
       response.status(400).json({
@@ -70,7 +69,49 @@ const ListAll = async (
     });
 };
 
+const EditID = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { usuarios } = request.body as { usuarios: Array<User> };
+
+  if (usuarios != undefined && usuarios.length > 0) {
+    for await (const usuario of usuarios) {
+      await PoolPostgreSQL(`UPDATE public.usuario
+      SET nome='${usuario.nome}', nascimento='${usuario.nascimento}', foto='${usuario.foto}'
+      WHERE codigo='${usuario.codigo}';
+      `)
+        .then((result) => {
+          const PoolPostgreSQLRetorno = result as QueryResult;
+          if (
+            PoolPostgreSQLRetorno.rowCount == 0 &&
+            PoolPostgreSQLRetorno.rowCount == undefined
+          ) {
+            response.status(400).json({
+              message: `Erro ao Editar no PoolPostgreSQL ${PoolPostgreSQLRetorno}`,
+            });
+          } else {
+            response.status(200).json({
+              message: "Usuario Editado",
+            });
+          }
+        })
+        .catch((error) => {
+          response.status(400).json({
+            message: `Erro ao Salvar no PoolPostgreSQL ${error}`,
+          });
+        });
+    }
+  } else {
+    response.status(400).json({
+      message: "Usuario não informados",
+    });
+  }
+};
+
 export default {
   Cadastro: Cadastro,
   ListAll: ListAll,
+  EditID: EditID,
 };

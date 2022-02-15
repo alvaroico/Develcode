@@ -8,5 +8,6 @@ router.get("/", function (req, res) {
 
 router.post("/Cadastro", User.Cadastro);
 router.get("/ListAll", User.ListAll);
+router.put("/EditID", User.EditID);
 
 export default router;
