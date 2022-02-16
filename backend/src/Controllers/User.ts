@@ -42,7 +42,7 @@ const Cadastro = async (
     }
   } else {
     response.status(400).json({
-      message: "Usuario não informados",
+      message: "Usuário não informados",
     });
   }
 };

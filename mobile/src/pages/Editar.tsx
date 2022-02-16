@@ -44,9 +44,9 @@ export default function Editar() {
             nascimento:
               usuarios.nascimento.getFullYear().toString() +
               "-" +
-              (parseInt((nascimento.getMonth()+1).toString()) < 10
-                ? "0" + (nascimento.getMonth()+1).toString()
-                : (nascimento.getMonth()+1).toString()) +
+              (parseInt((nascimento.getMonth() + 1).toString()) < 10
+                ? "0" + (nascimento.getMonth() + 1).toString()
+                : (nascimento.getMonth() + 1).toString()) +
               "-" +
               (parseInt(nascimento.getDate().toString()) < 10
                 ? "0" + nascimento.getDate().toString()
@@ -56,16 +56,16 @@ export default function Editar() {
         ],
       });
       await api
-        .post("/User/Cadastro", {
+        .post("/User/Cadastro", data, {
           headers: {
             authorization:
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
             "Content-Type": "application/json",
           },
-          data,
         })
         .then((response) => {
-          console.log(response.data.usuarios);
+          // console.log(response.data);
+          alert(response.data.message);
         })
         .catch((error) => {
           console.log("response ERRO", error);
@@ -85,9 +85,9 @@ export default function Editar() {
             nascimento:
               usuarios.nascimento.getFullYear().toString() +
               "-" +
-              (parseInt((nascimento.getMonth()+1).toString()) < 10
-                ? "0" + (nascimento.getMonth()+1).toString()
-                : (nascimento.getMonth()+1).toString()) +
+              (parseInt((nascimento.getMonth() + 1).toString()) < 10
+                ? "0" + (nascimento.getMonth() + 1).toString()
+                : (nascimento.getMonth() + 1).toString()) +
               "-" +
               (parseInt(nascimento.getDate().toString()) < 10
                 ? "0" + nascimento.getDate().toString()
@@ -97,16 +97,16 @@ export default function Editar() {
         ],
       });
       await api
-        .get("/User/EditID", {
+        .put("/User/EditID", data, {
           headers: {
             authorization:
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
             "Content-Type": "application/json",
           },
-          data: data,
         })
         .then((response) => {
-          console.log(response.data.usuarios);
+          // console.log(response.data);
+          alert(response.data.message);
         })
         .catch((error) => {
           console.log("response ERRO", error);
@@ -124,12 +124,14 @@ export default function Editar() {
       foto: foto,
     };
 
-    if (novoUsuario.codigo === 0) {
-      await cadastrarUsuario(novoUsuario);
+    if (novoUsuario.foto !== "" && novoUsuario.nome !== "") {
+      if (novoUsuario.codigo === 0) {
+        await cadastrarUsuario(novoUsuario);
+      } else {
+        await editarUsuario(novoUsuario);
+      }
     } else {
-      console.log("novoUsuario");
-
-      await editarUsuario(novoUsuario);
+      alert("Preencha todos os campos");
     }
   };
 
@@ -154,9 +156,9 @@ export default function Editar() {
           (parseInt(nascimento.getDate().toString()) < 10
             ? "0" + nascimento.getDate().toString() + "/"
             : nascimento.getDate().toString() + "/") +
-          (parseInt((nascimento.getMonth()+1).toString()) < 10
-            ? "0" + (nascimento.getMonth()+1).toString() + "/"
-            : (nascimento.getMonth()+1).toString()+ "/") +
+          (parseInt((nascimento.getMonth() + 1).toString()) < 10
+            ? "0" + (nascimento.getMonth() + 1).toString() + "/"
+            : (nascimento.getMonth() + 1).toString() + "/") +
           nascimento.getFullYear().toString()
         }
       />
