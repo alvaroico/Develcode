@@ -41,13 +41,16 @@ export default function Home() {
     }, [recargaUsuarios])
   );
 
-
   return (
     <View style={styles.container}>
       <View style={styles.switchContainer}>
         <Text>{"Usuarios"}</Text>
       </View>
-      <List usuarios={usuarios} />
+      {usuarios.length > 0 ? (
+        <List usuarios={usuarios} />
+      ) : (
+        <Text>{"Nenhum usuário cadastrado"}</Text>
+      )}
     </View>
   );
 }

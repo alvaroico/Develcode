@@ -10,32 +10,38 @@ import {
 import { SwipeListView } from "react-native-swipe-list-view";
 import { User } from "../interfaces/User";
 
-export default function List({ usuarios }: { usuarios: User[] }) {
-  console.log(usuarios);
+interface IlistData {
+  item: { key: string; text: string };
+}
 
+export default function List({ usuarios }: { usuarios: User[] }) {
   const [listData, setListData] = useState(
-    usuarios.map((user) => {return { key: user.codigo, text: `Usuario: ${user.nome}` }})
+    usuarios.map((user) => {
+      return { key: user.codigo, text: `${user.nome}` };
+    })
   );
 
-  const closeRow = (rowMap, rowKey) => {
+  const closeRow = (rowMap: any, rowKey: string) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
   };
 
-  const deleteRow = (rowMap, rowKey) => {
+  const deleteRow = (rowMap: any, rowKey: string) => {
     closeRow(rowMap, rowKey);
     const newData = [...listData];
-    const prevIndex = listData.findIndex((item) => item.key === rowKey);
+    const prevIndex = listData.findIndex(
+      (item) => item.key === parseInt(rowKey)
+    );
     newData.splice(prevIndex, 1);
     setListData(newData);
   };
 
-  const onRowDidOpen = (rowKey) => {
+  const onRowDidOpen = (rowKey: string) => {
     console.log("Arrastou para esquerda > Direita", rowKey);
   };
 
-  const renderItem = (data) => (
+  const renderItem = (data: IlistData) => (
     <TouchableHighlight
       onPress={() => console.log("Clicou no item", data.item.key)}
       style={styles.rowFront}
@@ -47,7 +53,7 @@ export default function List({ usuarios }: { usuarios: User[] }) {
     </TouchableHighlight>
   );
 
-  const renderHiddenItem = (data, rowMap:any) => (
+  const renderHiddenItem = (data: IlistData, rowMap: any) => (
     <View style={styles.rowBack}>
       <Text>Clicar para Editar</Text>
       <TouchableOpacity
