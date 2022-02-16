@@ -80,18 +80,20 @@ const editarUsuario = async (usuarios: User) => {
 
 const deletarUsuario = async (key: string) => {
   try {
-    await api
-      .get("/User/DeleteID?codigo=5", {
+    return await api
+      .delete(`/User/DeleteID?codigo=${key}`, {
         headers: {
           authorization:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
         },
       })
       .then((response) => {
-        console.log(response.data.usuarios);
+        alert(response.data.message)
+        return true;
       })
       .catch((error) => {
         console.log("response ERRO", error);
+        return false;
       });
   } catch (err) {
     console.warn(err);
@@ -111,14 +113,18 @@ export default function List({ usuarios }: { usuarios: User[] }) {
     }
   };
 
-  const deleteRow = (rowMap: any, rowKey: string) => {
-    closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex(
-      (item) => item.key === parseInt(rowKey)
-    );
-    newData.splice(prevIndex, 1);
-    setListData(newData);
+  const deleteRow = async (rowMap: any, rowKey: string) => {
+    if ((await deletarUsuario(rowKey)) === true) {
+      closeRow(rowMap, rowKey);
+      const newData = [...listData];
+      const prevIndex = listData.findIndex(
+        (item) => item.key === parseInt(rowKey)
+      );
+      newData.splice(prevIndex, 1);
+      setListData(newData);
+    } else {
+      alert("Erro ao deletar usuário");
+    }
   };
 
   const onRowDidOpen = (rowKey: string) => {
