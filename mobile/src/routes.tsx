@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 const { Navigator, Screen } = createStackNavigator();
 
 import Home from "./pages/Home";
+import Editar from "./pages/Editar";
 
 export default function Routes() {
   return (
@@ -16,7 +17,7 @@ export default function Routes() {
           cardStyle: { backgroundColor: "#f2f3f5" },
         }}
       >
-        <Screen name="Home" component={Home} />
+        <Screen name="Home" component={Editar} />
       </Navigator>
     </NavigationContainer>
   );
