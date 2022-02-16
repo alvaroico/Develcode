@@ -9,10 +9,94 @@ import {
 } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { User } from "../interfaces/User";
+import api from "../services/api";
 
 interface IlistData {
   item: { key: string; text: string };
 }
+
+const cadastrarUsuario = async (usuarios: User) => {
+  try {
+    var data = JSON.stringify({
+      usuarios: [
+        {
+          nome: "Alvaro",
+          nascimento: "1992-09-21",
+          foto: "https://avatars.githubusercontent.com/u/59286021?v=4",
+        },
+      ],
+    });
+    await api
+      .get("/User/Cadastro", {
+        headers: {
+          authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+          "Content-Type": "application/json",
+        },
+        data: data,
+      })
+      .then((response) => {
+        console.log(response.data.usuarios);
+      })
+      .catch((error) => {
+        console.log("response ERRO", error);
+      });
+  } catch (err) {
+    console.warn(err);
+  }
+};
+
+const editarUsuario = async (usuarios: User) => {
+  try {
+    var data = JSON.stringify({
+      usuarios: [
+        {
+          codigo: 5,
+          nome: "Alvaro Edit 3",
+          nascimento: "1992-09-21",
+          foto: "https://avatars.githubusercontent.com/u/59286021?v=4",
+        },
+      ],
+    });
+    await api
+      .get("/User/EditID", {
+        headers: {
+          authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+          "Content-Type": "application/json",
+        },
+        data: data,
+      })
+      .then((response) => {
+        console.log(response.data.usuarios);
+      })
+      .catch((error) => {
+        console.log("response ERRO", error);
+      });
+  } catch (err) {
+    console.warn(err);
+  }
+};
+
+const deletarUsuario = async (key: string) => {
+  try {
+    await api
+      .get("/User/DeleteID?codigo=5", {
+        headers: {
+          authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+        },
+      })
+      .then((response) => {
+        console.log(response.data.usuarios);
+      })
+      .catch((error) => {
+        console.log("response ERRO", error);
+      });
+  } catch (err) {
+    console.warn(err);
+  }
+};
 
 export default function List({ usuarios }: { usuarios: User[] }) {
   const [listData, setListData] = useState(

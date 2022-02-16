@@ -36,7 +36,7 @@ export default function Home() {
 
       searchApi();
       return () => {
-        alert("Screen was unfocused");
+        // alert("Screen was unfocused");
       };
     }, [recargaUsuarios])
   );
