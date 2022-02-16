@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import api from "../services/api";
 import { User } from "../interfaces/User";
+
+import List from "../componentes/List";
 
 export default function Home() {
   const [usuarios, setUsuarios] = useState<User[]>([]);
@@ -35,25 +36,39 @@ export default function Home() {
 
       searchApi();
       return () => {
-        // alert("Screen was unfocused");
+        alert("Screen was unfocused");
       };
     }, [recargaUsuarios])
   );
 
-  console.log("usuarios", usuarios);
 
   return (
     <View style={styles.container}>
-      <Text>Pagina Inicial 2</Text>
-      <StatusBar style="auto" />
+      <View style={styles.switchContainer}>
+        <Text>{"Usuarios"}</Text>
+      </View>
+      <List usuarios={usuarios} />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
+  },
+  switchContainer: {
+    flexDirection: "row",
     justifyContent: "center",
+    marginVertical: 30,
+    flexWrap: "wrap",
+  },
+  switch: {
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "black",
+    marginVertical: 2,
+    paddingVertical: 10,
+    width: Dimensions.get("window").width / 3,
   },
 });
