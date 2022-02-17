@@ -157,9 +157,39 @@ const DeleteID = async (
   }
 };
 
+const ListID = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  const { codigo } = request.query as { codigo: string };
+
+  await PoolPostgreSQL(`SELECT * FROM public.usuario
+  WHERE codigo=${codigo}`)
+    .then((result) => {
+      const PoolPostgreSQLRetorno = result as QueryResult;
+      if (PoolPostgreSQLRetorno.rows.length > 0) {
+        const usuarios = PoolPostgreSQLRetorno.rows as unknown as Array<User>;
+        response.status(200).json({
+          usuarios,
+        });
+      } else {
+        response.status(200).json({
+          [`usuarios`]: [],
+        });
+      }
+    })
+    .catch((error) => {
+      response.status(400).json({
+        message: `Erro ao Listar no PoolPostgreSQL ${JSON.stringify(error)}`,
+      });
+    });
+};
+
 export default {
   Cadastro: Cadastro,
   ListAll: ListAll,
   EditID: EditID,
   DeleteID: DeleteID,
+  ListID: ListID,
 };

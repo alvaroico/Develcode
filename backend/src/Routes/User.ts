@@ -8,6 +8,7 @@ router.get("/", function (req, res) {
 
 router.post("/Cadastro", User.Cadastro);
 router.get("/ListAll", User.ListAll);
+router.get("/ListID", User.ListID);
 router.put("/EditID", User.EditID);
 router.delete("/DeleteID", User.DeleteID);
 

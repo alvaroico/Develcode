@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { StyleSheet, Text, View, Dimensions, Button } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import api from "../services/api";
 import { User } from "../interfaces/User";
 
 import List from "../componentes/List";
 
 export default function Home() {
+  const navigation = useNavigation();
   const [usuarios, setUsuarios] = useState<User[]>([]);
-  const [recargaUsuarios, setRecargaUsuarios] = useState<boolean>(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -38,7 +38,7 @@ export default function Home() {
       return () => {
         // alert("Screen was unfocused");
       };
-    }, [recargaUsuarios])
+    }, [])
   );
 
   return (
@@ -51,6 +51,11 @@ export default function Home() {
       ) : (
         <Text>{"Nenhum usuário cadastrado"}</Text>
       )}
+      <Button
+        title="Novo Usuário"
+        // @ts-ignore"
+        onPress={() => navigation.navigate("Editar")}
+      />
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,7 @@ import {
 import api from "../services/api";
 import { User } from "../interfaces/User";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function Editar() {
   const [usuarios, setUsuarios] = useState<User>();
@@ -20,6 +21,49 @@ export default function Editar() {
   const [foto, setFoto] = useState("");
 
   const [show, setShow] = useState(false);
+
+  const navigation = useNavigation();
+
+  const route = useRoute();
+  const [codigoParams, setCodigoParams] = useState(route.params);
+
+  useEffect(() => {
+    if (codigoParams != undefined) {
+      const searchApi = async () => {
+        try {
+          await api
+            .get(`/User/ListID?codigo=${codigoParams}`, {
+              headers: {
+                authorization:
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+              },
+            })
+            .then((response) => {
+              // console.log("response", response);
+              setUsuarios(response.data.usuarios);
+              if (response.data.usuarios.length > 0) {                
+                setNome(response.data.usuarios[0].nome);
+                setNascimento(new Date(response.data.usuarios[0].nascimento));
+                setFoto(response.data.usuarios[0].foto);
+              } else {
+                alert("Não foi possível encontrar o usuário");
+              }
+            })
+            .catch((error) => {
+              console.log("response ERRO", error);
+            });
+        } catch (err) {
+          console.warn(err);
+        }
+      };
+
+      searchApi();
+    }
+
+    return () => {
+      setCodigoParams(undefined);
+    };
+  }, [codigoParams]);
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || nascimento;
@@ -127,8 +171,12 @@ export default function Editar() {
     if (novoUsuario.foto !== "" && novoUsuario.nome !== "") {
       if (novoUsuario.codigo === 0) {
         await cadastrarUsuario(novoUsuario);
+        // @ts-ignore
+        navigation.navigate("Home", true);
       } else {
         await editarUsuario(novoUsuario);
+        // @ts-ignore
+        navigation.navigate("Home", true);
       }
     } else {
       alert("Preencha todos os campos");

@@ -10,6 +10,7 @@ import {
 import { SwipeListView } from "react-native-swipe-list-view";
 import { User } from "../interfaces/User";
 import api from "../services/api";
+import { useNavigation } from "@react-navigation/native";
 
 interface IlistData {
   item: { key: string; text: string };
@@ -25,7 +26,7 @@ const deletarUsuario = async (key: string) => {
         },
       })
       .then((response) => {
-        alert(response.data.message)
+        alert(response.data.message);
         return true;
       })
       .catch((error) => {
@@ -38,6 +39,7 @@ const deletarUsuario = async (key: string) => {
 };
 
 export default function List({ usuarios }: { usuarios: User[] }) {
+  const navigation = useNavigation();
   const [listData, setListData] = useState(
     usuarios.map((user) => {
       return { key: user.codigo, text: `${user.nome}` };
@@ -70,7 +72,8 @@ export default function List({ usuarios }: { usuarios: User[] }) {
 
   const renderItem = (data: IlistData) => (
     <TouchableHighlight
-      onPress={() => console.log("Clicou no item", data.item.key)}
+    // @ts-ignore
+      onPress={() => navigation.navigate("Editar", data.item.key)}
       style={styles.rowFront}
       underlayColor={"#AAA"}
     >
@@ -115,8 +118,6 @@ export default function List({ usuarios }: { usuarios: User[] }) {
   );
 }
 
-// List.propTypes = { usuarios: propTypes.array };
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   },
   rowFront: {
     alignItems: "center",
-    backgroundColor: "#CCC",
+    backgroundColor: "#EEE",
     borderBottomColor: "black",
     borderBottomWidth: 1,
     justifyContent: "center",

@@ -17,7 +17,8 @@ export default function Routes() {
           cardStyle: { backgroundColor: "#f2f3f5" },
         }}
       >
-        <Screen name="Home" component={Editar} />
+        <Screen name="Home" component={Home} />
+        <Screen name="Editar" component={Editar} />
       </Navigator>
     </NavigationContainer>
   );
