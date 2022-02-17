@@ -84,9 +84,6 @@ export default function Editar() {
       nascimento: nascimento,
       foto: foto,
     };
-    console.log("novoUsuario", novoUsuario);
-    console.log("usuarios", usuarios.codigo );
-    
 
     if (novoUsuario.foto !== "" && novoUsuario.nome !== "") {
       if (novoUsuario.codigo === 0) {
