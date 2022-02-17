@@ -9,34 +9,12 @@ import {
 } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { User } from "../interfaces/User";
-import api from "../services/api";
+import { deletarUsuario } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
 
 interface IlistData {
   item: { key: string; text: string };
 }
-
-const deletarUsuario = async (key: string) => {
-  try {
-    return await api
-      .delete(`/User/DeleteID?codigo=${key}`, {
-        headers: {
-          authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
-        },
-      })
-      .then((response) => {
-        alert(response.data.message);
-        return true;
-      })
-      .catch((error) => {
-        console.log("response ERRO", error);
-        return false;
-      });
-  } catch (err) {
-    console.warn(err);
-  }
-};
 
 export default function List({ usuarios }: { usuarios: User[] }) {
   const navigation = useNavigation();
@@ -72,7 +50,7 @@ export default function List({ usuarios }: { usuarios: User[] }) {
 
   const renderItem = (data: IlistData) => (
     <TouchableHighlight
-    // @ts-ignore
+      // @ts-ignore
       onPress={() => navigation.navigate("Editar", data.item.key)}
       style={styles.rowFront}
       underlayColor={"#AAA"}

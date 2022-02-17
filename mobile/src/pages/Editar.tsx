@@ -9,7 +9,12 @@ import {
   Button,
   Platform,
 } from "react-native";
-import api from "../services/api";
+import {
+  searchApi,
+  cadastrarUsuario,
+  editarUsuario,
+  listID,
+} from "../services/api";
 import { User } from "../interfaces/User";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -31,17 +36,11 @@ export default function Editar() {
     if (codigoParams != undefined) {
       const searchApi = async () => {
         try {
-          await api
-            .get(`/User/ListID?codigo=${codigoParams}`, {
-              headers: {
-                authorization:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
-              },
-            })
+          listID(`${codigoParams}`)
             .then((response) => {
               // console.log("response", response);
               setUsuarios(response.data.usuarios);
-              if (response.data.usuarios.length > 0) {                
+              if (response.data.usuarios.length > 0) {
                 setNome(response.data.usuarios[0].nome);
                 setNascimento(new Date(response.data.usuarios[0].nascimento));
                 setFoto(response.data.usuarios[0].foto);
@@ -79,87 +78,6 @@ export default function Editar() {
     showMode("date");
   };
 
-  const cadastrarUsuario = async (usuarios: User) => {
-    try {
-      var data = JSON.stringify({
-        usuarios: [
-          {
-            nome: usuarios.nome,
-            nascimento:
-              usuarios.nascimento.getFullYear().toString() +
-              "-" +
-              (parseInt((nascimento.getMonth() + 1).toString()) < 10
-                ? "0" + (nascimento.getMonth() + 1).toString()
-                : (nascimento.getMonth() + 1).toString()) +
-              "-" +
-              (parseInt(nascimento.getDate().toString()) < 10
-                ? "0" + nascimento.getDate().toString()
-                : nascimento.getDate().toString() + "/"),
-            foto: usuarios.foto,
-          },
-        ],
-      });
-      await api
-        .post("/User/Cadastro", data, {
-          headers: {
-            authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          // console.log(response.data);
-          alert(response.data.message);
-        })
-        .catch((error) => {
-          console.log("response ERRO", error);
-        });
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
-  const editarUsuario = async (usuarios: User) => {
-    try {
-      var data = JSON.stringify({
-        usuarios: [
-          {
-            codigo: usuarios.codigo,
-            nome: usuarios.nome,
-            nascimento:
-              usuarios.nascimento.getFullYear().toString() +
-              "-" +
-              (parseInt((nascimento.getMonth() + 1).toString()) < 10
-                ? "0" + (nascimento.getMonth() + 1).toString()
-                : (nascimento.getMonth() + 1).toString()) +
-              "-" +
-              (parseInt(nascimento.getDate().toString()) < 10
-                ? "0" + nascimento.getDate().toString()
-                : nascimento.getDate().toString() + "/"),
-            foto: usuarios.foto,
-          },
-        ],
-      });
-      await api
-        .put("/User/EditID", data, {
-          headers: {
-            authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          // console.log(response.data);
-          alert(response.data.message);
-        })
-        .catch((error) => {
-          console.log("response ERRO", error);
-        });
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
   const botaoSalvar = async () => {
     const novoUsuario: User = {
       codigo: usuarios?.codigo ? usuarios.codigo : 0,
@@ -171,12 +89,14 @@ export default function Editar() {
     if (novoUsuario.foto !== "" && novoUsuario.nome !== "") {
       if (novoUsuario.codigo === 0) {
         await cadastrarUsuario(novoUsuario);
+        const usuariosList = await searchApi();
         // @ts-ignore
-        navigation.navigate("Home", true);
+        navigation.navigate("Home", usuariosList);
       } else {
         await editarUsuario(novoUsuario);
+        const usuariosList = await searchApi();
         // @ts-ignore
-        navigation.navigate("Home", true);
+        navigation.navigate("Home", usuariosList);
       }
     } else {
       alert("Preencha todos os campos");

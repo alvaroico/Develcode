@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Dimensions, Button } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import api from "../services/api";
+import { searchApi } from "../services/api";
 import { User } from "../interfaces/User";
 
 import List from "../componentes/List";
@@ -13,28 +13,15 @@ export default function Home() {
   useFocusEffect(
     React.useCallback(() => {
       // alert("Screen was focused");
-      const searchApi = async () => {
+      const consultaInicial = async () => {
         try {
-          await api
-            .get("/User/ListAll", {
-              headers: {
-                authorization:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
-              },
-            })
-            .then((response) => {
-              // console.log("response", response);
-              setUsuarios(response.data.usuarios);
-            })
-            .catch((error) => {
-              console.log("response ERRO", error);
-            });
+          setUsuarios((await searchApi()) as User[]);
         } catch (err) {
           console.warn(err);
         }
       };
 
-      searchApi();
+      consultaInicial();
       return () => {
         // alert("Screen was unfocused");
       };
