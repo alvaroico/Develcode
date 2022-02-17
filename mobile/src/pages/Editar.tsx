@@ -38,8 +38,7 @@ export default function Editar() {
         try {
           listID(`${codigoParams}`)
             .then((response) => {
-              // console.log("response", response);
-              setUsuarios(response.data.usuarios);
+              setUsuarios(response.data.usuarios[0]);
               if (response.data.usuarios.length > 0) {
                 setNome(response.data.usuarios[0].nome);
                 setNascimento(new Date(response.data.usuarios[0].nascimento));
@@ -85,6 +84,9 @@ export default function Editar() {
       nascimento: nascimento,
       foto: foto,
     };
+    console.log("novoUsuario", novoUsuario);
+    console.log("usuarios", usuarios.codigo );
+    
 
     if (novoUsuario.foto !== "" && novoUsuario.nome !== "") {
       if (novoUsuario.codigo === 0) {
