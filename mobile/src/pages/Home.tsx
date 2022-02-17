@@ -33,7 +33,7 @@ export default function Home() {
       <View style={styles.switchContainer}>
         <Text>{"Usuarios"}</Text>
       </View>
-      {usuarios.length > 0 ? (
+      {usuarios?.length > 0 ? (
         <List usuarios={usuarios} />
       ) : (
         <Text>{"Nenhum usuário cadastrado"}</Text>

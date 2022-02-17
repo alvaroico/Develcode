@@ -1,8 +1,11 @@
-import axios, { Axios, AxiosError, AxiosRequestHeaders } from "axios";
+import axios, { AxiosError } from "axios";
 import { User } from "../interfaces/User";
 
+const baseURL_ENV = "http://172.18.52.93:8822"
+const authorizationL_ENV = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM"
+
 export const api = axios.create({
-  baseURL: "http://172.27.65.171:8822",
+  baseURL: baseURL_ENV,
 });
 
 export const searchApi = async () => {
@@ -11,7 +14,7 @@ export const searchApi = async () => {
       .get("/User/ListAll", {
         headers: {
           authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+            authorizationL_ENV,
         },
       })
       .then((response) => {
@@ -32,7 +35,7 @@ export const deletarUsuario = async (key: string) => {
       .delete(`/User/DeleteID?codigo=${key}`, {
         headers: {
           authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+            authorizationL_ENV,
         },
       })
       .then((response) => {
@@ -72,7 +75,7 @@ export const cadastrarUsuario = async (usuarios: User) => {
       .post("/User/Cadastro", data, {
         headers: {
           authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+            authorizationL_ENV,
           "Content-Type": "application/json",
         },
       })
@@ -98,13 +101,13 @@ export const editarUsuario = async (usuarios: User) => {
           nascimento:
             usuarios.nascimento.getFullYear().toString() +
             "-" +
-            (parseInt((nascimento.getMonth() + 1).toString()) < 10
-              ? "0" + (nascimento.getMonth() + 1).toString()
-              : (nascimento.getMonth() + 1).toString()) +
+            (parseInt((usuarios.nascimento.getMonth() + 1).toString()) < 10
+              ? "0" + (usuarios.nascimento.getMonth() + 1).toString()
+              : (usuarios.nascimento.getMonth() + 1).toString()) +
             "-" +
-            (parseInt(nascimento.getDate().toString()) < 10
-              ? "0" + nascimento.getDate().toString()
-              : nascimento.getDate().toString() + "/"),
+            (parseInt(usuarios.nascimento.getDate().toString()) < 10
+              ? "0" + usuarios.nascimento.getDate().toString()
+              : usuarios.nascimento.getDate().toString() + "/"),
           foto: usuarios.foto,
         },
       ],
@@ -113,7 +116,7 @@ export const editarUsuario = async (usuarios: User) => {
       .put("/User/EditID", data, {
         headers: {
           authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+            authorizationL_ENV,
           "Content-Type": "application/json",
         },
       })
@@ -133,7 +136,7 @@ export const listID = async (codigoParams: string) => {
   return await api.get(`/User/ListID?codigo=${codigoParams}`, {
     headers: {
       authorization:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmlhY2FvIjoxNjQ0OTUwMzQ1MDAwLCJleHBpcmFjYW8iOjE2NzY0ODYyNjQwMDAsImNsaWVudGUiOiJSb290In0.aSO5pCfxGK2AaUMbw0VuYQtZDe8qsfESgPmntUOzFlM",
+        authorizationL_ENV,
     },
   });
 };
